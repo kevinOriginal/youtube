@@ -14,7 +14,8 @@ class App extends Component {
 
     this.state = {
       videos: [],
-      selectedVideo: null
+      selectedVideo: null,
+      value: ''
     };
 
     this.videoSearch('박효신 beautiful tomorrow');
@@ -25,18 +26,21 @@ class App extends Component {
     YTSearch({ key : API_KEY , term : term}, (crap) => {
       this.setState({
         videos : crap,
-        selectedVideo: crap[0]
+        selectedVideo: crap[0],
         });
     });
-
   }
 
   render() {
-    const videoSearch = _.debounce((term) => { this.videoSearch(term) }, 300 );
+    const value = this.state.value;
 
     return (
       <div>
-        <SearchBar onSearchTermChange={videoSearch}/>
+        <SearchBar
+          onSearchTermChange={term => this.videoSearch(term)}
+          onChange={value => this.setState({ value })}
+          value={value}
+          />
         <VideoDetail video={this.state.selectedVideo} />
         <VideoList
           onVideoSelect={selectedVideo => this.setState({selectedVideo: selectedVideo})}
